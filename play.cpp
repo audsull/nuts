@@ -20,12 +20,14 @@ public:
   explicit Deck();
   void printDeck();
   void shuffleDeck();
+  Card drawCard();
 };
 
 //28 cards
 class Board: public Deck {
-  Card board[28];
-public: 
+  std::vector<Card> board;
+public:
+  explicit Board();
   void printBoard();
 };
 
@@ -73,16 +75,31 @@ Deck::Deck() {
     }
   }
 }
-
 void Deck::printDeck() {
   for(int i = 0; i < 52; i++) {
     cout << toValue(card_deck.at(i).value) << " " << toSuit(card_deck.at(i).suit) << endl;
   }
 }
-
 void Deck::shuffleDeck() {
   srand(time(NULL));
   std::random_shuffle(card_deck.begin(), card_deck.end());
+}
+Card Deck::drawCard() {
+  Card drawed_card = card_deck.back();
+  card_deck.pop_back();
+  return drawed_card;
+}
+
+Board::Board() {
+  for(int i = 0; i < 28; i++) {
+    board.push_back(Deck::drawCard());
+  }
+}
+
+void Board::printBoard() {
+  for(int i = 0; i < 28; i++) {
+    cout << toValue(board.at(i).value) << " " << toSuit(board.at(i).suit) << endl;
+  }
 }
 
 void burn() {
@@ -95,11 +112,15 @@ int main() {
 
   team1.shuffleDeck();
   team2.shuffleDeck();
-  team1.printDeck();
+
+  //team1.printDeck();
   cout << endl;
-  team2.printDeck();
+  //team2.printDeck();
 
   //Set up the board
+  Board board1 = Board();
+  board1.printBoard();
+
   //Nutters and other player build decks
   //play game
   return 0;
